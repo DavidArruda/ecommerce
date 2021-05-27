@@ -21,6 +21,7 @@ public class Category {
 	@Column(columnDefinition = "text")
 	private String description;
 	
+	
 	public Category() {
 		// CONSTRUCTOR VAZIO
 	}
