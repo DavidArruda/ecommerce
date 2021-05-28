@@ -2,13 +2,20 @@ package com.david.ecommerce.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,32 +29,62 @@ public class Product {
 
 	@Column(length = 120, nullable = false)
 	private String name;
-	
-	@Column(columnDefinition = "text", unique = true)
+
+	@Column(length = 20, nullable = false, unique = true)
+	private String sku;
+
+	private Boolean status;
+
+	@Column(columnDefinition = "text", unique = true, nullable = false)
 	private String ean;
 
-	@Column(columnDefinition = "text")
+	@Column(length = 90)
+	private String brand;
+
+	@Column(columnDefinition = "text", nullable = false)
 	private String description;
 
-	@Column(precision = 15, scale = 2, nullable = false)
+	private Integer qty;
+
+	@Column(precision = 15, scale = 4, nullable = false)
+	private BigDecimal costPrice;
+
+	@Column(precision = 15, scale = 4, nullable = false)
 	private BigDecimal price;
 
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-	private List<ProductHasCategory> categories;
-	
-	@Column(columnDefinition = "text")
-	private List<String> images; 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_categorie"), nullable = false)
+	private Category category;
 
+	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+	private List<Image> images;
+
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@JoinTable(name = "products_has_attributes", joinColumns = {
+			@JoinColumn(name = "product_id") }, inverseJoinColumns = { @JoinColumn(name = "attribute_key") })
+	Set<ProductAttribute> attributes;
+
+	@Deprecated
 	public Product() {
-		// CONSTRUCTOR VAZIO
+		// CONSTRUTOR VAZIO
 	}
 
-	public Product(Long id, String name, String description, BigDecimal price, List<ProductHasCategory> categories) {
+	public Product(Long id, String name, String sku, String ean, String brand, String description, Integer qty,
+			BigDecimal costPrice, BigDecimal price, Category category, List<Image> images,
+			Set<ProductAttribute> attributes) {
+		super();
 		this.id = id;
 		this.name = name;
+		this.sku = sku;
+		this.ean = ean;
+		this.brand = brand;
 		this.description = description;
+		this.qty = qty;
+		this.costPrice = costPrice;
 		this.price = price;
-		this.categories = categories;
+		this.category = category;
+		this.images = images;
+		this.attributes = attributes;
 	}
 
 	public Long getId() {
@@ -66,12 +103,60 @@ public class Product {
 		this.name = name;
 	}
 
+	public String getSku() {
+		return sku;
+	}
+
+	public void setSku(String sku) {
+		this.sku = sku;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	public String getEan() {
+		return ean;
+	}
+
+	public void setEan(String ean) {
+		this.ean = ean;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getQty() {
+		return qty;
+	}
+
+	public void setQty(Integer qty) {
+		this.qty = qty;
+	}
+
+	public BigDecimal getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(BigDecimal costPrice) {
+		this.costPrice = costPrice;
 	}
 
 	public BigDecimal getPrice() {
@@ -82,22 +167,38 @@ public class Product {
 		this.price = price;
 	}
 
-	public List<ProductHasCategory> getCategories() {
-		return categories;
+	public Category getCategory() {
+		return category;
 	}
 
-	public ProductHasCategory addCategori(ProductHasCategory categorie) {
-		getCategories().add(categorie);
-		categorie.setProduct(this);
-		return categorie;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
-	public ProductHasCategory removeApontamento(ProductHasCategory categorie) {
-		getCategories().remove(categorie);
-		categorie.setProduct(null);
-		return categorie;
+	public List<Image> getImages() {
+		return images;
 	}
 
+	public Image addImage(Image image) {
+		getImages().add(image);
+		image.setProduct(this);
+		return image;
+	}
+
+	public Image removeImage(Image image) {
+		getImages().remove(image);
+		image.setProduct(null);
+		return image;
+	}
+
+	public Set<ProductAttribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Set<ProductAttribute> attributes) {
+		this.attributes = attributes;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
