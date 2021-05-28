@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "products_has_categories")
 public class ProductHasCategory {
@@ -17,16 +19,18 @@ public class ProductHasCategory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_product"), nullable = false)
 	private Product product;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_categorie"), nullable = false)
 	private Category category;
 	
 	public ProductHasCategory() {
-		// CONSTRUCTOR VAZIO
+		// CONSTRUTOR VAZIO
 	}
 
 	public ProductHasCategory(Long id, Product product, Category category) {
