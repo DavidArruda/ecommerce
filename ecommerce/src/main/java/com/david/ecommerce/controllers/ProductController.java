@@ -1,31 +1,57 @@
 package com.david.ecommerce.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.david.ecommerce.model.Product;
-import com.david.ecommerce.repositories.ProductRepository;
+import com.david.ecommerce.services.ProductService;
 
 @RestController
 @RequestMapping(path = "/products")
 public class ProductController {
-	
-	public ProductController(@Autowired ProductRepository repository) {
-		this.repository = repository;
+
+	private final ProductService service;
+
+	public ProductController(@Autowired ProductService service) {
+		this.service = service;
 	}
-	private final ProductRepository repository;
-	
+
 	@PostMapping
 	public ResponseEntity<Product> create(@RequestBody Product product) {
-		if (product == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(repository.save(product), HttpStatus.CREATED);
+		return new ResponseEntity<>(service.save(product), HttpStatus.CREATED);
+	}
+
+	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<Product>> findAll() {
+		return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+	}
+
+	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Product> findById(@PathVariable long id) {
+		return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/{id}")
+	public ResponseEntity<Product> update (@PathVariable long id, @RequestBody Product product) {
+		return new ResponseEntity<>(service.update(product), HttpStatus.OK);
+	}
+
+	@DeleteMapping(path = { "/{id}" })
+	public ResponseEntity<Product> delete(@PathVariable long id) {
+		service.delete(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }
