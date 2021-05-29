@@ -1,8 +1,10 @@
 package com.david.ecommerce.controllers;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +31,13 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Product> create(@RequestBody Product product) {
+	public ResponseEntity<Product> create(@RequestBody @Valid Product product) {
 		return new ResponseEntity<>(service.save(product), HttpStatus.CREATED);
 	}
 
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Product>> findAll() {
-		return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+	public ResponseEntity<Page<Product>> findAll(Pageable pageable) {
+		return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
