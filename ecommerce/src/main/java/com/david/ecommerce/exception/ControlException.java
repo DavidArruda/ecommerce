@@ -33,19 +33,21 @@ public class ControlException extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 
-		String msg = "";
+		var msg2 = new StringBuilder();
 
 		if (ex instanceof MethodArgumentNotValidException) {
 			List<ObjectError> list = ((MethodArgumentNotValidException) ex).getBindingResult().getAllErrors();
 			for (ObjectError objectError : list) {
-				msg += objectError.getDefaultMessage() + "\n";
+				msg2.append("[");
+				msg2.append(objectError.getDefaultMessage());
+				msg2.append("] ");
 			}
 		} else {
-			msg = ex.getMessage();
+			msg2.append(ex.getMessage());
 		}
 
-		ObjErrorApi objetoError = new ObjErrorApi();
-		objetoError.setError(msg);
+		var objetoError = new ObjErrorApi();
+		objetoError.setError(msg2.toString());
 		objetoError.setCode(status.value() + " ==> " + status.getReasonPhrase());
 
 		return new ResponseEntity<>(objetoError, headers, status);
@@ -73,7 +75,7 @@ public class ControlException extends ResponseEntityExceptionHandler {
 			msg = ex.getMessage();
 		}
 
-		ObjErrorApi objetoError = new ObjErrorApi();
+		var objetoError = new ObjErrorApi();
 		objetoError.setError(msg);
 		objetoError.setCode(
 				HttpStatus.INTERNAL_SERVER_ERROR + " ==> " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
