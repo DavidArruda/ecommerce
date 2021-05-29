@@ -25,7 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @RestControllerAdvice
 @ControllerAdvice
-public class ControlException extends ResponseEntityExceptionHandler {
+public class ControlExcep extends ResponseEntityExceptionHandler {
 
 	/* Tratamento da maioria dos erros */
 	@Override
