@@ -1,7 +1,5 @@
 package com.david.security.domain.resource;
 
-import java.sql.SQLException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +17,8 @@ public class UserResource {
 		this.repository = new UserRepository();
 	}
 
-	public ResponseEntity<User> finById(@PathVariable int id) throws SQLException {
-		return new ResponseEntity<>(repository.findById(id), HttpStatus.OK);
+	public ResponseEntity<User> finById(@PathVariable int id) {
+		return new ResponseEntity<>(repository.findByid(id).orElseThrow(), HttpStatus.OK);
 	}
 
 }

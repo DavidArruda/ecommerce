@@ -1,33 +1,23 @@
 package com.david.security.domain.repository;
 
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.david.security.domain.model.User;
 
+@Repository
 public class UserRepository {
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	private static final String FIND_BY_ID = "SELECT * FROM users WHERE id = ?";
 
-	@Autowired
-	private DataSource dataSource;
-
-	public User findById(int id) throws SQLException {
-		User user = null;
-		
-		var st = dataSource.getConnection().prepareStatement(FIND_BY_ID);
-		st.setInt(1, id);
-
-		var rs = st.executeQuery();
-
-			if (rs.next()) {
-				user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
-			}
-
-		return user;
+	public Optional<User> findByid(Integer id) {
+		return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_BY_ID, User.class, id));
 	}
 
 }
