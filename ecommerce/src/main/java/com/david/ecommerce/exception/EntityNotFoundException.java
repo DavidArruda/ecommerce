@@ -9,6 +9,6 @@ public class EntityNotFoundException extends BusinessException{
 	}
 	
 	public EntityNotFoundException(ProblemType mensagem) {
-		super(mensagem.toString());
+		super(mensagem.getDetail());
 	}
 }

@@ -1,8 +1,10 @@
 package com.david.ecommerce.controllers;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +15,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.david.ecommerce.dto.ReturnDTO;
 import com.david.ecommerce.model.Category;
-import com.david.ecommerce.repositories.CategorieRepository;
+import com.david.ecommerce.service.CategoryService;
 
 @RestController
 @RequestMapping(path = "/categories")
 public class CategoryController {
 
-	private final CategorieRepository repository;
+	private final CategoryService service;
 
-	public CategoryController(@Autowired CategorieRepository repository) {
-		this.repository = repository;
+	public CategoryController(@Autowired CategoryService service) {
+		this.service = service;
 	}
 
 	@PostMapping
-	public ResponseEntity<Category> create(@RequestBody Category category) {
-		return new ResponseEntity<>(repository.save(category), HttpStatus.CREATED);
+	public ResponseEntity<ReturnDTO> create(@RequestBody  @Valid Category category) {
+		service.save(category);
+		var returnDTO = new ReturnDTO("201", "Created", category.getId().toString()); 
+		return new ResponseEntity<>(returnDTO, HttpStatus.CREATED);
 	}
 
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<Category>> findAll() {
-		return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
+	public ResponseEntity<Page<Category>> findAll(Pageable pageable) {
+		return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Category> findById(@PathVariable long id) {
-		return repository.findById(id).map(category -> ResponseEntity.ok().body(category))
-				.orElse(ResponseEntity.notFound().build());
+		return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
 	}
 
 }

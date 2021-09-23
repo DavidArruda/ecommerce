@@ -1,15 +1,9 @@
 package com.david.ecommerce.model;
 
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "products_attributes")
@@ -21,19 +15,14 @@ public class ProductAttribute {
 	@Column(length = 120, nullable = false)
 	private String value;
 
-	@JsonIgnore
-	@ManyToMany(mappedBy = "attributes", fetch = FetchType.EAGER)
-	private Set<Product> products;
-
 	public ProductAttribute() {
 		// CONSTRUTOR VAZIO
 	}
 
-	public ProductAttribute(String key, String value, Set<Product> products) {
+	public ProductAttribute(String key, String value) {
 		super();
 		this.key = key;
 		this.value = value;
-		this.products = products;
 	}
 
 	public String getKey() {
@@ -41,7 +30,7 @@ public class ProductAttribute {
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.key = key.toUpperCase();
 	}
 
 	public String getValue() {
@@ -50,14 +39,6 @@ public class ProductAttribute {
 
 	public void setValue(String value) {
 		this.value = value;
-	}
-
-	public Set<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(Set<Product> products) {
-		this.products = products;
 	}
 
 }
