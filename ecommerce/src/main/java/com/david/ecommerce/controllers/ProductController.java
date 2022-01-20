@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.david.ecommerce.dto.ProductDTO;
 import com.david.ecommerce.model.Product;
-import com.david.ecommerce.service.ProductService;
+import com.david.ecommerce.service.impl.ProductServiceImpl;
 
 @RestController
 @RequestMapping(path = "/products")
 public class ProductController {
 
-	private final ProductService service;
+	private final ProductServiceImpl service;
 
-	public ProductController(@Autowired ProductService service) {
+	public ProductController(@Autowired ProductServiceImpl service) {
 		this.service = service;
 	}
 

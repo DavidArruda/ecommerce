@@ -1,49 +1,33 @@
 package com.david.ecommerce.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.david.ecommerce.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.david.ecommerce.exception.EntityNotFoundException;
-import com.david.ecommerce.exception.ProblemType;
-import com.david.ecommerce.model.Category;
-import com.david.ecommerce.repository.CategorieRepository;
+import java.util.Set;
 
 @Service
-public class CategoryService {
+public interface CategoryService {
 
-	private final CategorieRepository repository;
+    /**
+     * Salva uma nova categoria na base de dados.
+     * @param category
+     * @return Category com o id gerado no bando de dados.
+     */
+    Category save(Category category);
 
-	public CategoryService(@Autowired CategorieRepository repository) {
-		this.repository = repository;
-	}
+    Page<Category> findAll(Pageable pageable);
 
-	public Category save(Category category) {
-		return repository.save(category);
-	}
+    Category findById(long id);
 
-	public Page<Category> findAll(Pageable pageable) {
-		return repository.findAll(pageable);
-	}
+    Category update(Category category);
 
-	public Category findById(long id) {
-		return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(ProblemType.CATEGORY_NOT_FOUND));
-	}
+    void delete(Long id);
 
-	public Category update(Category category) {
-		if (!repository.existsById(category.getId())) {
-			throw new EntityNotFoundException(ProblemType.CATEGORY_NOT_FOUND);
-		}
+    void exists(Long id);
 
-		return repository.save(category);
-	}
+    void exists(Set<Long> categories);
 
-	public void delete(Long id) {
-		if (!repository.existsById(id)) {
-			throw new EntityNotFoundException(ProblemType.CATEGORY_NOT_FOUND);
-		}
-		repository.deleteById(id);
-	}
-
+    Set<Category> findByIds(Set<Long> ids);
 }

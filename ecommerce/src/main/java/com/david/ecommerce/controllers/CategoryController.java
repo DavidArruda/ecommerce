@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.david.ecommerce.dto.ReturnDTO;
 import com.david.ecommerce.model.Category;
-import com.david.ecommerce.service.CategoryService;
+import com.david.ecommerce.service.impl.CategoryServiceImpl;
 
 @RestController
 @RequestMapping(path = "/categories")
 public class CategoryController {
 
-	private final CategoryService service;
+	private final CategoryServiceImpl service;
 
-	public CategoryController(@Autowired CategoryService service) {
+	public CategoryController(@Autowired CategoryServiceImpl service) {
 		this.service = service;
 	}
 

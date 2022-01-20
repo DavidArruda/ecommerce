@@ -80,9 +80,11 @@ public class Product {
 
 	public Product() {}
 	
-	public Product(Long id, String name, String sku, Boolean status, String ean, String brand, String description,
-			Integer qty, BigDecimal costPrice, BigDecimal price,
-			Set<Category> categories, Set<Image> images, Set<ProductAttribute> attributes) {
+	public Product(Long id, String name, String sku, Boolean status,
+				   String ean, String brand, String description,
+				   Integer qty, BigDecimal costPrice, BigDecimal price,
+			       Set<Category> categories, Set<Image> images,
+				   Set<ProductAttribute> attributes) {
 		super();
 		this.id = id;
 		this.name = name;
